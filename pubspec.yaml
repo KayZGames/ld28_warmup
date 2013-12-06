@@ -1,0 +1,6 @@
+name: ld28_warmup
+description: LD28 Warmup
+dependencies:
+  browser: any
+  gamedev_helpers:
+    git: https://github.com/denniskaselow/gamedev_helpers
