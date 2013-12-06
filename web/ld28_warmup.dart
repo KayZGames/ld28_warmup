@@ -1,7 +1,7 @@
 library ld28_warmup;
 
 import 'package:gamedev_helpers/gamedev_helpers.dart';
-import 'package:dartemis/dartemis.dart';
+import 'package:ld28_warmup/client.dart';
 
 void main() {
   new Game().start();
@@ -18,6 +18,8 @@ class Game extends GameBase {
   List<EntitySystem> getSystems() {
     return [
         new CanvasCleaningSystem(canvas),
+        new RasterRenderingSystem(canvas),
+        new RandomFigureDrawer(canvas),
         new FpsRenderingSystem(ctx)
     ];
   }
