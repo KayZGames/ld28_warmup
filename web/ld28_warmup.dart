@@ -9,11 +9,12 @@ void main() {
 
 class Game extends GameBase {
   List<Figure> figures;
+  CanvasElement figureBuffer;
   Game() : super.noAssets('ld28_warmup', 'canvas', 800, 800);
 
 
   void createEntities() {
-    figures.forEach((fig) => addEntity([fig]));
+    figures.forEach((fig) => addEntity([fig, new Render()]));
   }
 
   List<Figure> createFigures() {
@@ -40,16 +41,26 @@ class Game extends GameBase {
         new FigureHighlightingSystem(canvas, figures),
         new CanvasCleaningSystem(canvas),
         new RasterRenderingSystem(canvas),
-        new FigureRenderingSystem(canvas),
+        new FigureRenderingSystem(figureBuffer),
+        new BufferToCanvasRenderingSystem(figureBuffer, ctx),
         new FpsRenderingSystem(ctx)
     ];
   }
 
   void onInit() {
     figures = createFigures();
+    figureBuffer = new CanvasElement(width: canvas.width, height: canvas.height);
   }
 
   void onInitDone() {
     // TODO: implement onInitDone
   }
+}
+
+class BufferToCanvasRenderingSystem extends VoidEntitySystem {
+  CanvasRenderingContext2D ctx;
+  CanvasElement buffer;
+  BufferToCanvasRenderingSystem(this.buffer, this.ctx);
+
+  void processSystem() => ctx.drawImage(buffer, 0, 0);
 }

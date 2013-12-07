@@ -47,7 +47,8 @@ class Figure extends Component {
     cp[5] = new Point(p4.x - 40 + random.nextInt(80), p4.y + random.nextInt(40));
     return new Figure(p1, p2, p3, p4, cp);
   }
-
 }
+
+class Render extends Component {}
 
 String randomColor() => 'rgb(${random.nextInt(256)}, ${random.nextInt(256)}, ${random.nextInt(256)})';
