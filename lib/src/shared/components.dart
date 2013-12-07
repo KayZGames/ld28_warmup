@@ -6,9 +6,13 @@ class Figure extends Component {
   final int id;
   final Point p1, p2, p3, p4;
   final List<Point> cp;
-  final String color;
+  final int h;
+  final double s, l;
+  bool hover = false;
   Figure(this.p1, this.p2, this.p3, this.p4, this.cp) : id = _nextId++,
-                                               color = randomColor();
+                                                        h = random.nextInt(360),
+                                                        s = 15 + 70 * random.nextDouble(),
+                                                        l = 15 + 70 * random.nextDouble();
   factory Figure.random(int x, int y, {Figure left, Figure above}) {
     Point p1, p2, p3, p4;
     var cp = new List<Point>(8);

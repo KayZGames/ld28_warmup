@@ -8,12 +8,12 @@ void main() {
 }
 
 class Game extends GameBase {
+  List<Figure> figures;
   Game() : super.noAssets('ld28_warmup', 'canvas', 800, 800);
 
 
   void createEntities() {
-    var figs = createFigures();
-    figs.forEach((fig) => addEntity([fig]));
+    figures.forEach((fig) => addEntity([fig]));
   }
 
   List<Figure> createFigures() {
@@ -37,6 +37,7 @@ class Game extends GameBase {
 
   List<EntitySystem> getSystems() {
     return [
+        new FigureHighlightingSystem(canvas, figures),
         new CanvasCleaningSystem(canvas),
         new RasterRenderingSystem(canvas),
         new FigureRenderingSystem(canvas),
@@ -45,7 +46,7 @@ class Game extends GameBase {
   }
 
   void onInit() {
-    // TODO: implement onInit
+    figures = createFigures();
   }
 
   void onInitDone() {
