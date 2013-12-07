@@ -36,10 +36,10 @@ class FigureRenderingSystem extends EntityProcessingSystem {
        ..moveTo(f.p1.x, f.p1.y)
        ..strokeStyle = f.color
        ..fillStyle = f.color
-       ..bezierCurveTo(f.p2.x, f.p2.y, f.p2.x, f.p2.y, f.p2.x, f.p2.y)
-       ..bezierCurveTo(f.p3.x, f.p3.y, f.p3.x, f.p3.y, f.p3.x, f.p3.y)
-       ..bezierCurveTo(f.p4.x, f.p4.y, f.p4.x, f.p4.y, f.p4.x, f.p4.y)
-       ..bezierCurveTo(f.p1.x, f.p1.y, f.p1.x, f.p1.y, f.p1.x, f.p1.y)
+       ..bezierCurveTo(f.cp[0].x, f.cp[0].y, f.cp[1].x, f.cp[1].y, f.p2.x, f.p2.y)
+       ..bezierCurveTo(f.cp[2].x, f.cp[2].y, f.cp[3].x, f.cp[3].y, f.p3.x, f.p3.y)
+       ..bezierCurveTo(f.cp[4].x, f.cp[4].y, f.cp[5].x, f.cp[5].y, f.p4.x, f.p4.y)
+       ..bezierCurveTo(f.cp[6].x, f.cp[6].y, f.cp[7].x, f.cp[7].y, f.p1.x, f.p1.y)
        ..fill()
        ..stroke();
   }
