@@ -12,14 +12,34 @@ class Game extends GameBase {
 
 
   void createEntities() {
-    // TODO: implement createEntities
+    var figs = createFigures();
+    figs.forEach((fig) => addEntity([fig]));
+  }
+
+  List<Figure> createFigures() {
+    var lastFig = null;
+    var figs = new List<Figure>();
+    for (int y = 0; y <= 800; y+=100) {
+      for (int x = 0; x <= 800; x+=100) {
+        var fig;
+        if (y == 0) {
+          fig = new Figure.random(x, y, left: lastFig);
+        } else {
+          fig = new Figure.random(x, y, above: figs[figs.length - 9], left: lastFig);
+        }
+        lastFig = fig;
+        figs.add(fig);
+      }
+      lastFig = null;
+    }
+    return figs;
   }
 
   List<EntitySystem> getSystems() {
     return [
         new CanvasCleaningSystem(canvas),
         new RasterRenderingSystem(canvas),
-        new RandomFigureDrawer(canvas),
+        new FigureRenderingSystem(canvas),
         new FpsRenderingSystem(ctx)
     ];
   }
