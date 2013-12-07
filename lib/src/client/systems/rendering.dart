@@ -80,10 +80,20 @@ class FigureRenderingSystem extends EntityProcessingSystem {
 
   void processEntity(Entity entity) {
     var f = fm.get(entity);
-    ctx..beginPath()
-       ..moveTo(f.p1.x, f.p1.y)
-       ..setStrokeColorHsl(f.h, f.hover ? f.s + 15 : f.s, f.hover ? f.l + 15 : f.l)
-       ..setFillColorHsl(f.h, f.hover ? f.s + 15 : f.s, f.hover ? f.l + 15 : f.l)
+    ctx.beginPath();
+    if (f.hover) {
+      var grd = ctx.createRadialGradient(f.center.x, f.center.y, 25, f.center.x, f.center.y, 75);
+      grd.addColorStop(0, 'hsl(${f.h}, ${f.s + 15}%, ${f.l + 15}%)');
+      grd.addColorStop(1, 'hsl(${f.h}, ${f.s}%, ${f.l}%)');
+      ctx.fillStyle = grd;
+    } else {
+      ctx.setFillColorHsl(f.h, f.s, f.l);
+    }
+
+    ctx..moveTo(f.p1.x, f.p1.y)
+       ..setStrokeColorHsl(f.h, f.s, f.l)
+//       ..setStrokeColorHsl(f.h, f.hover ? f.s + 15 : f.s, f.hover ? f.l + 15 : f.l)
+//       ..setFillColorHsl(f.h, f.hover ? f.s + 15 : f.s, f.hover ? f.l + 15 : f.l)
        ..bezierCurveTo(f.cp[0].x, f.cp[0].y, f.cp[1].x, f.cp[1].y, f.p2.x, f.p2.y)
        ..bezierCurveTo(f.cp[2].x, f.cp[2].y, f.cp[3].x, f.cp[3].y, f.p3.x, f.p3.y)
        ..bezierCurveTo(f.cp[4].x, f.cp[4].y, f.cp[5].x, f.cp[5].y, f.p4.x, f.p4.y)

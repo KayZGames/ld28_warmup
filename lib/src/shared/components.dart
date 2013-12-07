@@ -4,12 +4,12 @@ class Figure extends Component {
   static int _nextId = 0;
   static const int _dist = 100;
   final int id;
-  final Point p1, p2, p3, p4;
+  final Point p1, p2, p3, p4, center;
   final List<Point> cp;
   final int h;
   final double s, l;
   bool hover = false;
-  Figure(this.p1, this.p2, this.p3, this.p4, this.cp) : id = _nextId++,
+  Figure(this.center, this.p1, this.p2, this.p3, this.p4, this.cp) : id = _nextId++,
                                                         h = random.nextInt(360),
                                                         s = 15 + 70 * random.nextDouble(),
                                                         l = 15 + 70 * random.nextDouble();
@@ -45,7 +45,7 @@ class Figure extends Component {
     cp[3] = new Point(p3.x - random.nextInt(40), p3.y - 40 + random.nextInt(80));
     cp[4] = new Point(p3.x - 40 + random.nextInt(80), p3.y - random.nextInt(40));
     cp[5] = new Point(p4.x - 40 + random.nextInt(80), p4.y + random.nextInt(40));
-    return new Figure(p1, p2, p3, p4, cp);
+    return new Figure(new Point((p1.x + p2.x + p3.x + p4.x)/4,(p1.y + p2.y + p3.y + p4.y)/4), p1, p2, p3, p4, cp);
   }
 }
 
