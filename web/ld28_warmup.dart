@@ -45,14 +45,14 @@ class Game extends GameBase {
         new PathCreator(path, maxX, maxY),
         new FigureHighlightingSystem(figures),
         new CanvasCleaningSystem(canvas),
-        new RasterRenderingSystem(canvas),
+//        new RasterRenderingSystem(canvas),
         new FigureRenderingSystem(figureBuffer),
         new BufferToCanvasRenderingSystem(figureBuffer, ctx),
         new InformationRenderer(canvas),
         new ScoreRenderer(ctx, path),
         new SuccessRenderer(ctx),
-        new FailureRenderer(ctx),
-        new FpsRenderingSystem(ctx)
+        new FailureRenderer(ctx)
+//        new FpsRenderingSystem(ctx)
     ];
   }
 
