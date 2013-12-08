@@ -10,6 +10,9 @@ void main() {
 class Game extends GameBase {
   List<Figure> figures;
   CanvasElement figureBuffer;
+  Queue<int> path = new Queue<int>();
+  int maxX = 9, maxY = 9;
+  int stepX = 100, stepY = 100;
   Game() : super.noAssets('ld28_warmup', 'canvas', 800, 800);
 
 
@@ -20,13 +23,13 @@ class Game extends GameBase {
   List<Figure> createFigures() {
     var lastFig = null;
     var figs = new List<Figure>();
-    for (int y = 0; y <= 800; y+=100) {
-      for (int x = 0; x <= 800; x+=100) {
+    for (int y = 0; y < maxY * stepY; y+=stepY) {
+      for (int x = 0; x < maxX * stepX; x+=stepX) {
         var fig;
         if (y == 0) {
           fig = new Figure.random(x, y, left: lastFig);
         } else {
-          fig = new Figure.random(x, y, above: figs[figs.length - 9], left: lastFig);
+          fig = new Figure.random(x, y, above: figs[figs.length - maxX], left: lastFig);
         }
         lastFig = fig;
         figs.add(fig);
@@ -38,7 +41,9 @@ class Game extends GameBase {
 
   List<EntitySystem> getSystems() {
     return [
-        new FigureHighlightingSystem(canvas, figures),
+        new FigureEventListeningSystem(canvas, figures),
+        new PathCreator(path, maxX, maxY),
+        new FigureHighlightingSystem(figures),
         new CanvasCleaningSystem(canvas),
         new RasterRenderingSystem(canvas),
         new FigureRenderingSystem(figureBuffer),
