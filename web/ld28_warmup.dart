@@ -43,6 +43,7 @@ class Game extends GameBase {
         new RasterRenderingSystem(canvas),
         new FigureRenderingSystem(figureBuffer),
         new BufferToCanvasRenderingSystem(figureBuffer, ctx),
+        new InformationRenderer(canvas),
         new FpsRenderingSystem(ctx)
     ];
   }

@@ -21,15 +21,18 @@ class RasterRenderingSystem extends VoidEntitySystem {
 
 class FigureHighlightingSystem extends EntityProcessingSystem {
   CanvasElement canvas;
+  CanvasRenderingContext2D hiddenCtx;
   List<Figure> figures;
   ComponentMapper<Figure> fm;
   int hoverId = null;
+  InformationRenderer info;
   FigureHighlightingSystem(this.canvas, this.figures) : super(Aspect.getAspectForAllOf([Figure]));
 
   void initialize() {
     fm = new ComponentMapper<Figure>(Figure, world);
+    info = world.getSystem(InformationRenderer);
     var hiddenCanvas = new CanvasElement(width: canvas.width, height: canvas.height);
-    var hiddenCtx = hiddenCanvas.context2D;
+    hiddenCtx = hiddenCanvas.context2D;
     figures.forEach((f) {
       hiddenCtx..beginPath()
                ..moveTo(f.p1.x, f.p1.y)
@@ -43,14 +46,24 @@ class FigureHighlightingSystem extends EntityProcessingSystem {
                ..stroke();
     });
     canvas.onMouseMove.listen((event) {
-      var imageData = hiddenCtx.getImageData(event.offset.x-1, event.offset.y+1, 3, 3);
-      var data = imageData.data;
-      // there is some anti aliasing going on.. make sure the right color is selected
-      // and check color of edges and center
-      if (data[19] == 255 && data[0] == data[8] && data[20] == data[28] && data[16] == data[0] && data[16] == data[20]) {
-        hoverId = data[0];
-      }
+      react(event, (id) => hoverId = id);
     });
+    StreamSubscription subscription;
+    subscription = canvas.onClick.listen((event) {
+      react(event, (_) => info.start());
+      subscription.cancel();
+    });
+  }
+
+  void react(MouseEvent event, void action(int id)) {
+    var imageData = hiddenCtx.getImageData(event.offset.x-1, event.offset.y+1, 3, 3);
+    var data = imageData.data;
+    // there is some anti aliasing going on.. make sure the right color is selected
+    // and check color of edges and center
+    if (data[19] == 255 && data[0] == data[8] && data[20] == data[28] && data[16] == data[0] && data[16] == data[20]) {
+      action(data[0]);
+      hoverId = data[0];
+    }
   }
 
   void processEntity(Entity entity) {
@@ -102,5 +115,35 @@ class FigureRenderingSystem extends EntityProcessingSystem {
        ..stroke();
     entity.removeComponent(Render);
     entity.changedInWorld();
+  }
+}
+
+class InformationRenderer extends VoidEntitySystem {
+  CanvasQuery ctx;
+  int width, height;
+  int startFrame = 0;
+  String text = 'Click on a figure to start';
+  InformationRenderer(CanvasElement canvas) : ctx = cq(canvas),
+                                              width = canvas.width,
+                                              height = canvas.height;
+
+
+  void processSystem() {
+    int displayCount = world.frame - startFrame;
+    if (displayCount < 300) {
+      ctx.save();
+      ctx.globalAlpha = ease.outCubic((300 - displayCount)/300, 1, 0);
+      ctx.font = '30px Verdana';
+      var bounds = ctx.textBoundaries(text, width * 0.8);
+      var textWidth = min(bounds.width, ctx.measureText(text).width);
+      ctx.wrappedText(text, (width - textWidth) ~/ 2, (height - bounds.height) ~/ 2, width * 0.8);
+
+      ctx.restore();
+    }
+  }
+
+  void start() {
+    startFrame = world.frame;
+    text = 'Follow the light';
   }
 }
