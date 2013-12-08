@@ -41,7 +41,7 @@ class Game extends GameBase {
 
   List<EntitySystem> getSystems() {
     return [
-        new FigureEventListeningSystem(canvas, figures),
+        new FigureEventListeningSystem(canvas, figures, path),
         new PathCreator(path, maxX, maxY),
         new FigureHighlightingSystem(figures),
         new CanvasCleaningSystem(canvas),
@@ -49,6 +49,7 @@ class Game extends GameBase {
         new FigureRenderingSystem(figureBuffer),
         new BufferToCanvasRenderingSystem(figureBuffer, ctx),
         new InformationRenderer(canvas),
+        new ScoreRenderer(ctx),
         new FpsRenderingSystem(ctx)
     ];
   }

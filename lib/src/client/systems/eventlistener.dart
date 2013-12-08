@@ -8,12 +8,16 @@ class FigureEventListeningSystem extends VoidEntitySystem {
   InformationRenderer info;
   FigureHighlightingSystem highlighter;
   PathCreator pathCreator;
-  FigureEventListeningSystem(this.canvas, this.figures);
+  ScoreRenderer scorer;
+  Queue<int> path;
+  int current = -1;
+  FigureEventListeningSystem(this.canvas, this.figures, this.path);
 
   void initialize() {
     info = world.getSystem(InformationRenderer);
     highlighter = world.getSystem(FigureHighlightingSystem);
     pathCreator = world.getSystem(PathCreator);
+    scorer = world.getSystem(ScoreRenderer);
     var hiddenCanvas = new CanvasElement(width: canvas.width, height: canvas.height);
     hiddenCtx = hiddenCanvas.context2D;
     figures.forEach((f) {
@@ -29,7 +33,21 @@ class FigureEventListeningSystem extends VoidEntitySystem {
                ..stroke();
     });
     canvas.onMouseMove.listen((event) {
-      react(event, (id) => highlighter.hoverId = id);
+      react(event, (id) {
+        if (current != id) {
+          highlighter.hoverId = id;
+          if (path.isNotEmpty) {
+            var first = path.removeFirst();
+            if (first == id) {
+              scorer.score++;
+            } else {
+              scorer.errors++;
+              path.addFirst(first);
+            }
+          }
+          current = id;
+        }
+      });
     });
     StreamSubscription subscription;
     subscription = canvas.onClick.listen((event) {

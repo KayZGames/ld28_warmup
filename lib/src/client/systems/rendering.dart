@@ -86,3 +86,32 @@ class InformationRenderer extends VoidEntitySystem {
     text = 'Follow the light';
   }
 }
+
+class ScoreRenderer extends VoidEntitySystem {
+  int _score = 0;
+  int errors = 0;
+  CanvasRenderingContext2D ctx;
+  PathCreator pathCreator;
+  ScoreRenderer(this.ctx);
+
+  void initialize() {
+    pathCreator = world.getSystem(PathCreator);
+  }
+
+  void processSystem() {
+    ctx.save();
+    ctx.font = '20px Verdana';
+    ctx.fillText('Score: $_score', 680, 10);
+    ctx.fillText('Errors: $errors', 680, 40);
+    ctx.restore();
+  }
+
+  void set score(int value) {
+    _score = value;
+    if (_score % 10 == 0) {
+      pathCreator.time *= 0.9;
+    }
+  }
+
+  int get score => _score;
+}
