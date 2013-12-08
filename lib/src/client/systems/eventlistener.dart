@@ -39,10 +39,16 @@ class FigureEventListeningSystem extends VoidEntitySystem {
           if (path.isNotEmpty) {
             var first = path.removeFirst();
             if (first == id) {
-              scorer.score++;
+              scorer.addScore(event.offset.x, event.offset.y);
+              var e = world.createEntity();
+              e.addComponent(new Success(event.offset.x, event.offset.y));
+              e.addToWorld();
             } else {
               scorer.errors++;
               path.addFirst(first);
+              var e = world.createEntity();
+              e.addComponent(new Failure(event.offset.x, event.offset.y));
+              e.addToWorld();
             }
           }
           current = id;

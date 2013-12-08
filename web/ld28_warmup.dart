@@ -49,7 +49,9 @@ class Game extends GameBase {
         new FigureRenderingSystem(figureBuffer),
         new BufferToCanvasRenderingSystem(figureBuffer, ctx),
         new InformationRenderer(canvas),
-        new ScoreRenderer(ctx),
+        new ScoreRenderer(ctx, path),
+        new SuccessRenderer(ctx),
+        new FailureRenderer(ctx),
         new FpsRenderingSystem(ctx)
     ];
   }

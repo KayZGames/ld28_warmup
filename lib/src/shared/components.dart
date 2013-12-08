@@ -51,4 +51,20 @@ class Figure extends Component {
 
 class Render extends Component {}
 
+
+abstract class Status extends Component {
+  int x, y;
+  double timer = 1000.0;
+  Status(this.x, this.y);
+  String get text;
+}
+class Success extends Status {
+  Success(int x, int y) : super(x, y);
+  String get text => '+1';
+}
+class Failure extends Status {
+  Failure(int x, int y) : super(x, y);
+  String get text => '-1';
+}
+
 String randomColor() => 'rgb(${random.nextInt(256)}, ${random.nextInt(256)}, ${random.nextInt(256)})';

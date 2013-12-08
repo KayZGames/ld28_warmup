@@ -92,26 +92,97 @@ class ScoreRenderer extends VoidEntitySystem {
   int errors = 0;
   CanvasRenderingContext2D ctx;
   PathCreator pathCreator;
-  ScoreRenderer(this.ctx);
+  Queue path;
+  double scoreX, errorX, stepsX;
+  ScoreRenderer(this.ctx, this.path);
 
   void initialize() {
     pathCreator = world.getSystem(PathCreator);
+    ctx.save();
+    ctx.font = '20px Verdana';
+    scoreX = 800 - ctx.measureText('Score:').width - 50;
+    errorX = 800 - ctx.measureText('Errors:').width - 50;
+    stepsX = 800 - ctx.measureText('Steps behind:').width - 50;
+    ctx.restore();
   }
 
   void processSystem() {
     ctx.save();
     ctx.font = '20px Verdana';
-    ctx.fillText('Score: $_score', 680, 10);
-    ctx.fillText('Errors: $errors', 680, 40);
+    ctx.fillText('Score: $_score', scoreX, 10);
+    ctx.fillText('Errors: $errors', errorX, 40);
+    ctx.fillText('Steps behind: ${path.length}', stepsX, 70);
     ctx.restore();
   }
 
-  void set score(int value) {
-    _score = value;
+  void addScore(int x, int y) {
+    _score++;
     if (_score % 10 == 0) {
       pathCreator.time *= 0.9;
     }
   }
+}
 
-  int get score => _score;
+abstract class StatusRenderer extends EntityProcessingSystem {
+  CanvasRenderingContext2D ctx;
+  StatusRenderer(this.ctx, Aspect aspect) : super(aspect);
+
+
+  void renderStatus(Entity e, Status status) {
+    ctx.globalAlpha = ease.outCubic(status.timer / 1000, 1, 0);
+    ctx.fillText(status.text, status.x, ease.outCubic(status.timer / 1000, 25, status.y));
+    status.timer -= world.delta;
+    if (status.timer < 0) {
+      e.deleteFromWorld();
+    }
+  }
+
+}
+
+class SuccessRenderer extends StatusRenderer {
+  ComponentMapper<Success> sm;
+  SuccessRenderer(CanvasRenderingContext2D ctx) : super(ctx, Aspect.getAspectForAllOf([Success]));
+
+  void initialize() {
+    sm = new ComponentMapper<Success>(Success, world);
+  }
+
+  void begin() {
+    ctx.save();
+    ctx.strokeStyle = 'white';
+    ctx.fillStyle = 'green';
+    ctx.font = '18px Verdana';
+  }
+
+  void processEntity(Entity entity) {
+    renderStatus(entity, sm.get(entity));
+  }
+
+  void end() {
+    ctx.restore();
+  }
+}
+
+class FailureRenderer extends StatusRenderer {
+  ComponentMapper<Failure> fm;
+  FailureRenderer(CanvasRenderingContext2D ctx) : super(ctx, Aspect.getAspectForAllOf([Failure]));
+
+  void initialize() {
+    fm = new ComponentMapper<Failure>(Failure, world);
+  }
+
+  void begin() {
+    ctx.save();
+    ctx.strokeStyle = 'white';
+    ctx.fillStyle = 'red';
+    ctx.font = '18px Verdana';
+  }
+
+  void processEntity(Entity entity) {
+    renderStatus(entity, fm.get(entity));
+  }
+
+  void end() {
+    ctx.restore();
+  }
 }
