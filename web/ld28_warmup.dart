@@ -11,10 +11,11 @@ class Game extends GameBase {
   List<Figure> figures;
   CanvasElement figureBuffer;
   Queue<int> path = new Queue<int>();
-  int maxX = 9, maxY = 9;
-  int stepX = 100, stepY = 100;
+  int maxX = 9,
+      maxY = 9;
+  int stepX = 100,
+      stepY = 100;
   Game() : super.noAssets('ld28_warmup', 'canvas', 800, 800);
-
 
   void createEntities() {
     figures.forEach((fig) => addEntity([fig, new Render()]));
@@ -23,13 +24,14 @@ class Game extends GameBase {
   List<Figure> createFigures() {
     var lastFig = null;
     var figs = new List<Figure>();
-    for (int y = 0; y < maxY * stepY; y+=stepY) {
-      for (int x = 0; x < maxX * stepX; x+=stepX) {
+    for (int y = 0; y < maxY * stepY; y += stepY) {
+      for (int x = 0; x < maxX * stepX; x += stepX) {
         var fig;
         if (y == 0) {
           fig = new Figure.random(x, y, left: lastFig);
         } else {
-          fig = new Figure.random(x, y, above: figs[figs.length - maxX], left: lastFig);
+          fig = new Figure.random(x, y,
+              above: figs[figs.length - maxX], left: lastFig);
         }
         lastFig = fig;
         figs.add(fig);
@@ -39,10 +41,10 @@ class Game extends GameBase {
     return figs;
   }
 
-  List<EntitySystem> getSystems() {
-    return [
+  Map<int, List<EntitySystem>> getSystems() {
+    return {
+      GameBase.rendering: [
         new FigureEventListeningSystem(canvas, figures, path),
-        new PathCreator(path, maxX, maxY),
         new FigureHighlightingSystem(figures),
         new CanvasCleaningSystem(canvas),
 //        new RasterRenderingSystem(canvas),
@@ -53,16 +55,15 @@ class Game extends GameBase {
         new SuccessRenderer(ctx),
         new FailureRenderer(ctx)
 //        new FpsRenderingSystem(ctx)
-    ];
+      ],
+      GameBase.physics: [new PathCreator(path, maxX, maxY),]
+    };
   }
 
-  void onInit() {
+  onInit() {
     figures = createFigures();
-    figureBuffer = new CanvasElement(width: canvas.width, height: canvas.height);
-  }
-
-  void onInitDone() {
-    // TODO: implement onInitDone
+    figureBuffer =
+        new CanvasElement(width: canvas.width, height: canvas.height);
   }
 }
 

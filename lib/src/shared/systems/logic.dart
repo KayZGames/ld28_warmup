@@ -2,16 +2,17 @@ part of shared;
 
 class PathCreator extends EntitySystem {
   bool started = false;
-  double time = 1000.0;
+  double timeDelta = 1.0;
   double startTime;
   int currentId = null;
   int lastId = -1;
   Queue<int> path;
   int maxId, maxX;
   FigureHighlightingSystem highlighter;
-  PathCreator(this.path, int maxX, int maxY) : maxId = maxX * maxY,
-                                               maxX = maxX,
-                                               super(Aspect.getEmpty());
+  PathCreator(this.path, int maxX, int maxY)
+      : maxId = maxX * maxY,
+        maxX = maxX,
+        super(Aspect.getEmpty());
 
   void initialize() {
     highlighter = world.getSystem(FigureHighlightingSystem);
@@ -19,12 +20,12 @@ class PathCreator extends EntitySystem {
 
   void start(int id) {
     currentId = id;
-    startTime = world.time;
+    startTime = time;
     started = true;
   }
 
   void processEntities(_) {
-    startTime = world.time;
+    startTime = time;
     int nextId;
     var direction = getDirections();
     do {
@@ -53,22 +54,23 @@ class PathCreator extends EntitySystem {
     return direction;
   }
 
-  bool checkProcessing() => started && world.time - (startTime+time) > 0;
+  bool checkProcessing() => started && time - (startTime + timeDelta) > 0;
 }
 
 class FigureHighlightingSystem extends EntityProcessingSystem {
   List<Figure> figures;
-  ComponentMapper<Figure> fm;
+  Mapper<Figure> fm;
   int hoverId = null;
   int pathId = null;
-  FigureHighlightingSystem(this.figures) : super(Aspect.getAspectForAllOf([Figure]));
+  FigureHighlightingSystem(this.figures)
+      : super(Aspect.getAspectForAllOf([Figure]));
 
   void initialize() {
-    fm = new ComponentMapper<Figure>(Figure, world);
+    fm = new Mapper<Figure>(Figure, world);
   }
 
   void processEntity(Entity entity) {
-    var f = fm.get(entity);
+    var f = fm[entity];
     if ((f.id == hoverId || f.id == pathId) && !f.hover) {
       f.hover = true;
       entity.addComponent(new Render());

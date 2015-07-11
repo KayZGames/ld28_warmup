@@ -2,7 +2,9 @@ name: ld28_warmup
 description: LD28 Warmup
 dependencies:
   browser: any
-  canvas_query: any
-  dartemis_toolbox: any
   gamedev_helpers:
-    git: https://github.com/denniskaselow/gamedev_helpers
+#    git: https://github.com/denniskaselow/gamedev_helpers
+    path: ../gamedev_helpers
+  dart_to_js_script_rewriter: any
+transformers:
+- dart_to_js_script_rewriter

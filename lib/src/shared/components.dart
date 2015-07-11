@@ -9,10 +9,11 @@ class Figure extends Component {
   final int h;
   final double s, l;
   bool hover = false;
-  Figure(this.center, this.p1, this.p2, this.p3, this.p4, this.cp) : id = _nextId++,
-                                                        h = random.nextInt(360),
-                                                        s = 15 + 70 * random.nextDouble(),
-                                                        l = 15 + 70 * random.nextDouble();
+  Figure(this.center, this.p1, this.p2, this.p3, this.p4, this.cp)
+      : id = _nextId++,
+        h = random.nextInt(360),
+        s = 15 + 70 * random.nextDouble(),
+        l = 15 + 70 * random.nextDouble();
   factory Figure.random(int x, int y, {Figure left, Figure above}) {
     Point p1, p2, p3, p4;
     var cp = new List<Point>(8);
@@ -42,17 +43,22 @@ class Figure extends Component {
       cp[7] = above.cp[2];
     }
     var diffX = p3.x - p2.x;
-    cp[2] = new Point(p2.x + random.nextInt(diffX~/2), p2.y - 40 + random.nextInt(80));
-    cp[3] = new Point(p3.x - random.nextInt(diffX~/2), p3.y - 40 + random.nextInt(80));
+    cp[2] = new Point(
+        p2.x + random.nextInt(diffX ~/ 2), p2.y - 40 + random.nextInt(80));
+    cp[3] = new Point(
+        p3.x - random.nextInt(diffX ~/ 2), p3.y - 40 + random.nextInt(80));
     var diffY = p3.y - p4.y;
-    cp[4] = new Point(p3.x - 40 + random.nextInt(80), p3.y - random.nextInt(diffY~/2));
-    cp[5] = new Point(p4.x - 40 + random.nextInt(80), p4.y + random.nextInt(diffY~/2));
-    return new Figure(new Point((p1.x + p2.x + p3.x + p4.x)/4,(p1.y + p2.y + p3.y + p4.y)/4), p1, p2, p3, p4, cp);
+    cp[4] = new Point(
+        p3.x - 40 + random.nextInt(80), p3.y - random.nextInt(diffY ~/ 2));
+    cp[5] = new Point(
+        p4.x - 40 + random.nextInt(80), p4.y + random.nextInt(diffY ~/ 2));
+    return new Figure(new Point(
+            (p1.x + p2.x + p3.x + p4.x) / 4, (p1.y + p2.y + p3.y + p4.y) / 4),
+        p1, p2, p3, p4, cp);
   }
 }
 
 class Render extends Component {}
-
 
 abstract class Status extends Component {
   int x, y;
@@ -69,4 +75,5 @@ class Failure extends Status {
   String get text => '-1';
 }
 
-String randomColor() => 'rgb(${random.nextInt(256)}, ${random.nextInt(256)}, ${random.nextInt(256)})';
+String randomColor() =>
+    'rgb(${random.nextInt(256)}, ${random.nextInt(256)}, ${random.nextInt(256)})';
