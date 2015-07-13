@@ -1989,7 +1989,7 @@ s=z.b.cD()
 t=y.gO(u)
 t=t.gm(t)
 u=y.gO(u)
-u=new F.br(t,u.gn(u),1000)
+u=new F.br(t,u.gn(u),1)
 s.r.aB(s,S.ag(u.gw(u)),u)
 s.e.c.B(0,s)}else{v.Q=v.geA()+1
 y.cu(x)
@@ -1998,7 +1998,7 @@ y=J.l(u)
 w=y.gO(u)
 w=w.gm(w)
 u=y.gO(u)
-u=new F.b9(w,u.gn(u),1000)
+u=new F.b9(w,u.gn(u),1)
 s.r.aB(s,S.ag(u.gw(u)),u)
 s.e.c.B(0,s)}}z.fr=a}}},
 eU:{
@@ -2114,8 +2114,8 @@ db:{
 "^":"bO;",
 cR:function(a,b){var z,y
 z=this.z
-J.l(z).sd1(z,F.cm(b.gf4()/1000,1,0))
-C.f.aR(z,b.gcU(b),b.a,F.cm(b.c/1000,25,b.b))
+J.l(z).sd1(z,F.cm(b.gf4(),1,0))
+C.f.aR(z,b.gcU(b),b.a,F.cm(b.c,25,b.b))
 z=b.c
 y=this.b.ch
 if(typeof y!=="number")return H.r(y)
@@ -5325,8 +5325,8 @@ C.h=H.q("ah")
 C.I=H.q("cR")
 C.J=H.q("kK")
 C.K=H.q("as")
-C.L=H.q("jX")
 C.M=H.q("jY")
+C.L=H.q("jX")
 C.n=H.q("cF")
 C.N=H.q("k6")
 C.O=H.q("ju")
