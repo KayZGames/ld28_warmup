@@ -137,9 +137,9 @@ abstract class StatusRenderer extends EntityProcessingSystem {
   StatusRenderer(this.ctx, Aspect aspect) : super(aspect);
 
   void renderStatus(Entity e, Status status) {
-    ctx.globalAlpha = outCubic(status.timer / 1000, 1, 0);
+    ctx.globalAlpha = outCubic(status.timer, 1, 0);
     ctx.fillText(
-        status.text, status.x, outCubic(status.timer / 1000, 25, status.y));
+        status.text, status.x, outCubic(status.timer, 25, status.y));
     status.timer -= world.delta;
     if (status.timer < 0) {
       e.deleteFromWorld();

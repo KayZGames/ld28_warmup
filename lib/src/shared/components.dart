@@ -62,7 +62,7 @@ class Render extends Component {}
 
 abstract class Status extends Component {
   int x, y;
-  double timer = 1000.0;
+  double timer = 1.0;
   Status(this.x, this.y);
   String get text;
 }
